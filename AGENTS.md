@@ -94,6 +94,9 @@ Typical commands:
 
 Use Docker Compose for local PostgreSQL infrastructure.
 
+Use the `justfile` for common tasks: `just db-up`, `just test`, `just run`,
+and later `just load-test` for the Go load generator.
+
 ## Working With Tasks
 
 Before making any change:

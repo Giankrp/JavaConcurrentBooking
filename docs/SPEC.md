@@ -143,20 +143,23 @@ It is a testing tool, not part of the Java application's runtime.
 
 ## Roadmap
 
-### Phase 1
+### Phase 1 — completed
 Project setup, PostgreSQL, Flyway and basic domain.
 
-### Phase 2
-Resources and bookings REST API.
+### Phase 2 — completed
+Resources and bookings REST API, business rules and validation, plus the
+pulled-forward overlap enforcement: PostgreSQL exclusion constraint
+(migration `V2`, decision 003) and a dedicated concurrency test.
 
-### Phase 3
-Business rules and validation.
+### Phase 3 — absorbed by Phase 2
+Business rules and validation were implemented together with the API.
 
-### Phase 4
-Unit and integration tests.
+### Phase 4 — absorbed by Phase 2
+Unit, integration and concurrency tests (Testcontainers + PostgreSQL).
 
-### Phase 5
-Concurrency correctness.
+### Phase 5 — absorbed by Phase 2
+Database-level concurrency guarantee; scale-level verification is part of
+the load generator (Phase 7).
 
 ### Phase 6
 Authentication and authorization.
@@ -171,12 +174,12 @@ Only work on the current phase unless explicitly asked otherwise.
 
 ## Current Phase
 
-**Phase 2 — Resources and bookings REST API (in progress).**
+**Phase 7 — Go load generator (in progress).**
 
-- Phase 1 (project setup, PostgreSQL, Flyway, basic domain) is complete.
-- Done in Phase 2: users API, temporary security config opening `/api/**`
-  and `/actuator/health` until authentication lands in Phase 6.
-- Next: resources and bookings endpoints done, including the pulled-forward
-  overlap enforcement (PostgreSQL exclusion constraint, migration `V2`,
-  decision 003, concurrency test).
-- Massive load testing remains Phase 5/7.
+- Phase 2 complete: users, resources and bookings APIs; cancellation;
+  overlap enforced by the database with exactly one winner per interval,
+  proven by the concurrency test.
+- The load generator is a separate Go program reproducing contention over
+  HTTP and checking the invariant at scale.
+- Phase 6 (authentication) comes after the generator; the generator stays
+  unauthenticated meanwhile.
