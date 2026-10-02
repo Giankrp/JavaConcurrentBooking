@@ -106,9 +106,11 @@ The concurrency strategy has not yet been finalized. Investigate and compare
 appropriate PostgreSQL/Spring approaches before choosing one.
 
 Scope update: overlap enforcement (rules #5 and #6) was pulled forward into
-Phase 2 at the user's request. A PostgreSQL exclusion constraint on active
-bookings (documented in an upcoming decision) provides the database-level
-guarantee. Dedicated concurrency tests remain Phase 5; the Go load generator
+Phase 2 at the user's request. A PostgreSQL partial exclusion constraint on
+active bookings (migration `V2`, documented in
+`docs/decisions/003-booking-overlap-enforcement.md`) provides the
+database-level guarantee, proven by a dedicated concurrency test.
+Dedicated concurrency tests remain Phase 5; the Go load generator
 remains Phase 7.
 
 ## Testing
@@ -174,6 +176,7 @@ Only work on the current phase unless explicitly asked otherwise.
 - Phase 1 (project setup, PostgreSQL, Flyway, basic domain) is complete.
 - Done in Phase 2: users API, temporary security config opening `/api/**`
   and `/actuator/health` until authentication lands in Phase 6.
-- Next: resources and bookings endpoints, including the pulled-forward
-  overlap enforcement (PostgreSQL exclusion constraint).
+- Next: resources and bookings endpoints done, including the pulled-forward
+  overlap enforcement (PostgreSQL exclusion constraint, migration `V2`,
+  decision 003, concurrency test).
 - Massive load testing remains Phase 5/7.

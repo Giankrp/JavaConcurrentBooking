@@ -1,5 +1,8 @@
 package com.jaBook.demo;
 
+import com.jaBook.demo.booking.BookingConflictException;
+import com.jaBook.demo.booking.BookingNotFoundException;
+import com.jaBook.demo.booking.ResourceInactiveException;
 import com.jaBook.demo.resource.ResourceNotFoundException;
 import com.jaBook.demo.user.EmailAlreadyUsedException;
 import com.jaBook.demo.user.UserNotFoundException;
@@ -13,14 +16,21 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ApiExceptionHandler {
 
-    @ExceptionHandler({ UserNotFoundException.class, ResourceNotFoundException.class })
+    @ExceptionHandler({ UserNotFoundException.class, ResourceNotFoundException.class,
+            BookingNotFoundException.class })
     ProblemDetail handleNotFound(RuntimeException e) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage());
     }
 
-    @ExceptionHandler({ EmailAlreadyUsedException.class, DataIntegrityViolationException.class })
+    @ExceptionHandler({ EmailAlreadyUsedException.class, DataIntegrityViolationException.class,
+            ResourceInactiveException.class, BookingConflictException.class })
     ProblemDetail handleConflict(Exception e) {
-        String detail = (e instanceof EmailAlreadyUsedException) ? e.getMessage() : "Resource already exists";
+        String detail = switch (e) {
+            case EmailAlreadyUsedException ex -> ex.getMessage();
+            case ResourceInactiveException ex -> ex.getMessage();
+            case BookingConflictException ex -> ex.getMessage();
+            default -> "Resource already exists";
+        };
         return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, detail);
     }
 
