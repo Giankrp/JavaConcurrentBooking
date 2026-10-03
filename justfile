@@ -29,6 +29,10 @@ run:
 test:
     ./mvnw test
 
+# Run the Go load generator against a running API (just load-test URL N)
+load-test url="http://localhost:8080" n="50":
+    cd loadgen && go run . -url {{url}} -n {{n}}
+
 # Build and run all checks including integration tests
 verify:
     ./mvnw verify
